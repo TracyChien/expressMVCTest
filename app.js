@@ -3,23 +3,8 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
-const dotenv = require("dotenv");
-const mongoose = require("mongoose");
 
-dotenv.config({ path: "./config.env" });
-const DB = process.env.DATABASE.replace(
-  "<password>",
-  process.env.DATABASE_PASSWORD
-);
-
-mongoose
-  .connect(DB)
-  .then(() => {
-    console.log("資料庫連線成功");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
+require("./connections");
 
 var indexRouter = require("./routes/index");
 var postsRouter = require("./routes/posts");
@@ -35,5 +20,13 @@ app.use(cors());
 
 app.use("/", indexRouter);
 app.use("/posts", postsRouter);
+
+app.use((req, res) => {
+  res.status(404).send("抱歉，您的頁面找不到");
+});
+app.use((err, req, res) => {
+  console.err(err.stack);
+  res.status(500).send("程式有些問題，請稍候嘗試");
+});
 
 module.exports = app;
