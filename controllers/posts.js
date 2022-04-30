@@ -36,10 +36,14 @@ const posts = {
         },
         { new: true }
       );
-      res.status(200).json({
-        status: "success",
-        data: newPost,
-      });
+      if (newPost !== null) {
+        res.status(200).json({
+          status: "success",
+          data: newPost,
+        });
+      } else {
+        handleError(res, "");
+      }
     } catch (err) {
       handleError(res, err);
     }
@@ -48,10 +52,14 @@ const posts = {
     try {
       const id = req.params.id;
       const delPost = await Post.findByIdAndDelete(id);
-      res.status(200).json({
-        status: "success",
-        data: delPost,
-      });
+      if (delPost !== null) {
+        res.status(200).json({
+          status: "success",
+          data: delPost,
+        });
+      } else {
+        handleError(res, "");
+      }
     } catch (err) {
       handleError(res, err);
     }
